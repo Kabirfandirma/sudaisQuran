@@ -5,31 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Listen to Qur'an recitation by Sheikh AbdulRahman Al-Sudais. Full Surah audio with playlist, custom player, and offline-ready PWA."
+      content="Listen to Qur'an recitation by Sheikh AbdulRahman Al-Sudais. Full Surah audio with playlist, custom player, and organic glass UI."
     />
     <meta name="author" content="Kabir Almustapha Fandirma" />
-    <meta name="theme-color" content="#0f172a" />
 
     <title>Qur'an Recitation - Sheikh AbdulRahman Al-Sudais</title>
 
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json" />
-    <link
-      rel="icon"
-      href="assets/images/icon-192.png"
-      sizes="192x192"
-      type="image/png"
-    />
-    <link rel="apple-touch-icon" href="assets/images/icon-512.png" />
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            borderRadius: {
+              "blob-1": "40% 60% 70% 30% / 50% 60% 40% 50%",
+              "blob-2": "50% 40% 60% 50% / 40% 50% 60% 60%",
+              bubble: "30% 70% 70% 30% / 30% 30% 70% 70%",
+              "btn-organic": "25% 75% 80% 20% / 40% 40% 60% 60%",
+              "btn-primary": "45% 55% 60% 40% / 50% 50% 50% 50%",
+            },
+            colors: {
+              "calm-teal": "#2D9596",
+              "calm-blue": "#9AD0C2",
+              "calm-cream": "#F5F5DC",
+              "calm-sand": "#F1EEDC",
+              "calm-gray": "#F8F9FA",
+              "glass-white": "rgba(255, 255, 255, 0.75)",
+              "glass-border": "rgba(255, 255, 255, 0.9)",
+            },
+            backdropBlur: {
+              glass: "20px",
+              bubble: "15px",
+              btn: "10px",
+            },
+            boxShadow: {
+              glass:
+                "0 20px 40px rgba(45, 149, 150, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.02)",
+              "glass-hover":
+                "0 25px 50px rgba(45, 149, 150, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.05)",
+              bubble:
+                "0 10px 25px rgba(45, 149, 150, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+              "bubble-hover":
+                "0 15px 30px rgba(45, 149, 150, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+              raised:
+                "0 6px 15px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(255, 255, 255, 0.9) inset",
+              "raised-hover":
+                "0 10px 20px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(255, 255, 255, 0.95) inset",
+              primary:
+                "0 12px 25px rgba(45, 149, 150, 0.15), 0 2px 6px rgba(255, 255, 255, 0.6) inset",
+              "primary-hover":
+                "0 16px 30px rgba(45, 149, 150, 0.2), 0 3px 8px rgba(255, 255, 255, 0.7) inset",
+            },
+            animation: {
+              "float-slow": "float 8s ease-in-out infinite",
+              "pulse-soft": "pulse-soft 4s ease-in-out infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-8px)" },
+              },
+              "pulse-soft": {
+                "0%, 100%": { opacity: "1" },
+                "50%": { opacity: "0.9" },
+              },
+            },
+          },
+        },
+      };
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -41,64 +91,171 @@
 
     <!-- Custom Styles -->
     <style>
+      :root {
+        --calm-teal: #2d9596;
+        --calm-blue: #9ad0c2;
+        --calm-cream: #f5f5dc;
+        --calm-sand: #f1eedc;
+        --glass-bg: rgba(255, 255, 255, 0.78);
+        --glass-border: rgba(255, 255, 255, 0.95);
+      }
+
       body {
         font-family: "Inter", sans-serif;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #fdfdf8 0%, #f9f9f3 100%);
         min-height: 100vh;
+        color: #5d6d7e;
       }
 
       .arabic-font {
         font-family: "Scheherazade New", serif;
       }
 
-      .card-shadow {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      /* Glass Morphism Base */
+      .glass-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--tw-shadow);
       }
 
-      .player-shadow {
-        box-shadow: 0 15px 35px rgba(5, 65, 95, 0.08);
+      /* Organic Blob Shapes */
+      .glass-blob {
+        border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
+        transition: border-radius 0.8s ease;
       }
 
-      /* Custom Range Sliders */
-      input[type="range"] {
+      .glass-blob:hover {
+        border-radius: 50% 40% 60% 50% / 40% 50% 60% 60%;
+      }
+
+      /* Floating Glass Bubbles */
+      .glass-bubble {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        transition: all 0.4s ease;
+      }
+
+      .glass-bubble:hover {
+        transform: translateY(-3px);
+        border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+      }
+
+      /* Button Styles */
+      .btn-organic {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.95);
+        border-radius: 25% 75% 80% 20% / 40% 40% 60% 60%;
+        transition: all 0.3s ease;
+        color: #5d6d7e;
+      }
+
+      .btn-organic:hover {
+        transform: translateY(-2px) scale(1.03);
+        color: var(--calm-teal);
+      }
+
+      .btn-organic:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--calm-teal), #2a8b8c);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 45% 55% 60% 40% / 50% 50% 50% 50%;
+        transition: all 0.4s ease;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        border-radius: 50% 50% 50% 50% / 45% 55% 45% 55%;
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #2a8b8c, var(--calm-teal));
+      }
+
+      /* Custom Range Slider */
+      .range-slider {
         -webkit-appearance: none;
+        width: 100%;
         height: 6px;
-        background: #e2e8f0;
-        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
         outline: none;
       }
-      input[type="range"]::-webkit-slider-thumb {
+
+      .range-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
-        background: #0e7490;
+        background: white;
         cursor: pointer;
-        border: 3px solid white;
-        box-shadow: 0 2px 6px rgba(14, 116, 144, 0.3);
+        border: 2px solid var(--calm-teal);
+        box-shadow: 0 3px 8px rgba(45, 149, 150, 0.2),
+          0 1px 2px rgba(255, 255, 255, 0.9) inset;
+        transition: all 0.2s ease;
       }
-      input[type="range"]::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
+
+      .range-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(45, 149, 150, 0.25),
+          0 1px 3px rgba(255, 255, 255, 0.95) inset;
+      }
+
+      .range-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
-        background: #0e7490;
+        background: white;
         cursor: pointer;
-        border: 3px solid white;
-        box-shadow: 0 2px 6px rgba(14, 116, 144, 0.3);
+        border: 2px solid var(--calm-teal);
+        box-shadow: 0 3px 8px rgba(45, 149, 150, 0.2),
+          0 1px 2px rgba(255, 255, 255, 0.9) inset;
+      }
+
+      /* Playlist Items */
+      .playlist-item {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 18px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.75rem;
+      }
+
+      .playlist-item:hover {
+        background: rgba(255, 255, 255, 0.85);
+        transform: translateX(4px);
+        border-color: rgba(45, 149, 150, 0.2);
+      }
+
+      .playlist-item.current {
+        background: rgba(45, 149, 150, 0.08);
+        border-color: var(--calm-teal);
+        border-left: 4px solid var(--calm-teal);
       }
 
       /* Toggle Switch */
-      .toggle-switch {
+      .toggle-container {
         position: relative;
         display: inline-block;
-        width: 52px;
+        width: 50px;
         height: 26px;
       }
-      .toggle-switch input {
+
+      .toggle-container input {
         opacity: 0;
         width: 0;
         height: 0;
       }
+
       .toggle-slider {
         position: absolute;
         cursor: pointer;
@@ -106,158 +263,199 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #cbd5e1;
+        background-color: rgba(154, 208, 194, 0.4);
+        backdrop-filter: blur(4px);
         transition: 0.4s;
         border-radius: 34px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
       }
+
       .toggle-slider:before {
         position: absolute;
         content: "";
         height: 18px;
         width: 18px;
         left: 4px;
-        bottom: 4px;
+        bottom: 3px;
         background-color: white;
         transition: 0.4s;
         border-radius: 50%;
-      }
-      input:checked + .toggle-slider {
-        background-color: #0e7490;
-      }
-      input:checked + .toggle-slider:before {
-        transform: translateX(26px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       }
 
-      /* Playlist Hover */
-      .playlist-item:hover {
-        background-color: #f0f9ff;
-        border-color: #bae6fd;
+      .toggle-container input:checked + .toggle-slider {
+        background-color: var(--calm-teal);
       }
 
-      /* Scrollbar */
-      .playlist-scroll::-webkit-scrollbar {
+      .toggle-container input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+      }
+
+      /* Scrollbar Styling */
+      .scrollbar-glass::-webkit-scrollbar {
         width: 6px;
       }
-      .playlist-scroll::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 3px;
-      }
-      .playlist-scroll::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 3px;
-      }
-      .playlist-scroll::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+
+      .scrollbar-glass::-webkit-scrollbar-track {
+        background: rgba(241, 245, 249, 0.3);
+        border-radius: 10px;
       }
 
-      /* Current Playing */
-      .current-playing {
-        background-color: #f0f9ff !important;
-        border-left: 4px solid #0e7490 !important;
+      .scrollbar-glass::-webkit-scrollbar-thumb {
+        background: rgba(154, 208, 194, 0.5);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
       }
 
-      /* Button Hover */
-      .play-btn {
-        transition: all 0.3s ease;
-      }
-      .play-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 10px 20px rgba(14, 116, 144, 0.2);
+      .scrollbar-glass::-webkit-scrollbar-thumb:hover {
+        background: rgba(45, 149, 150, 0.6);
       }
 
-      /* Responsive */
+      /* Text Selection */
+      ::selection {
+        background-color: rgba(154, 208, 194, 0.3);
+        color: #2d9596;
+      }
+
+      /* Focus States */
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px solid var(--calm-teal);
+        outline-offset: 2px;
+      }
+
+      /* Responsive Adjustments */
       @media (max-width: 768px) {
-        .mobile-stack {
-          flex-direction: column;
+        .glass-blob {
+          border-radius: 28px;
+          margin: 0.5rem;
         }
-        .mobile-full {
-          width: 100%;
+
+        .glass-bubble {
+          border-radius: 24px;
+        }
+
+        .btn-organic,
+        .btn-primary {
+          border-radius: 20px;
         }
       }
     </style>
   </head>
-
-  <body class="text-gray-800">
-    <div class="container mx-auto px-4 py-6 md:py-10 max-w-5xl">
+  <body class="antialiased">
+    <div
+      class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6"
+    >
       <!-- Header -->
-      <header class="text-center mb-8 md:mb-12">
+      <header class="w-full max-w-6xl text-center mb-10 md:mb-14">
         <div
-          class="inline-flex items-center justify-center p-3 bg-white rounded-full card-shadow mb-4"
+          class="inline-flex items-center justify-center p-5 glass-bubble mb-6 animate-float-slow"
         >
-          <i class="fas fa-quran text-2xl text-cyan-700"></i>
+          <i class="fas fa-quran text-3xl text-calm-teal"></i>
         </div>
-        <h1 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
-          Qur'an Recitation Player
+
+        <h1
+          class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 tracking-tight"
+        >
+          Qur'an Audio Player
         </h1>
-        <p class="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
-          Listen to the Holy Qur'an with reverence and focus
+
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Listen with reverence to the beautiful recitation of Sheikh
+          AbdulRahman Al-Sudais
         </p>
       </header>
 
-      <div class="flex flex-col lg:flex-row gap-6 md:gap-8">
+      <div class="w-full max-w-6xl grid lg:grid-cols-3 gap-6 md:gap-8">
         <!-- Main Player Card -->
-        <div class="lg:w-2/3">
+        <div class="lg:col-span-2">
           <div
-            class="bg-white rounded-xl md:rounded-2xl player-shadow p-5 md:p-7"
+            class="glass-container glass-blob p-6 md:p-8 shadow-glass hover:shadow-glass-hover"
           >
             <!-- Reciter Info -->
             <div
-              class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left mb-7 md:mb-9"
+              class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 mb-8 md:mb-10"
             >
-              <div
-                class="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border-4 border-white shadow-md mb-4 sm:mb-0"
-              >
-                <img
-                  src="assets/images/sudais.jpg"
-                  alt="Sheikh AbdulRahman Al-Sudais"
-                  class="w-full h-full object-cover"
-                />
+              <div class="relative">
+                <div
+                  class="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white/80 shadow-lg"
+                >
+                  <img
+                    src="assets/images/sudais.jpg"
+                    alt="Sheikh AbdulRahman Al-Sudais"
+                    class="w-full h-full object-cover"
+                    onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'"
+                  />
+                </div>
+                <div
+                  class="absolute inset-0 bg-gradient-to-tr from-calm-teal/5 to-transparent rounded-full"
+                ></div>
               </div>
-              <div class="sm:ml-6">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-900">
-                  Sheikh AbdulRahman Al-Sudais
+
+              <div class="flex-1 text-center md:text-left">
+                <h2
+                  class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 arabic-font"
+                >
+                  عبدالرحمن السديس
                 </h2>
-                <p class="text-cyan-700 mt-1">
-                  Imam of the Grand Mosque, Makkah
-                </p>
-                <p class="text-gray-600 text-sm md:text-base mt-3 max-w-md">
-                  Renowned for his beautiful and heartfelt recitation of the
-                  Holy Qur'an.
+                <div
+                  class="inline-flex items-center px-4 py-2 glass-bubble mb-4"
+                >
+                  <i class="fas fa-mosque text-calm-teal mr-2"></i>
+                  <span class="text-sm font-semibold text-calm-teal">
+                    Imam of Masjid al-Haram
+                  </span>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Renowned worldwide for his soulful and melodious Qur'an
+                  recitation that brings peace to listeners.
                 </p>
               </div>
             </div>
 
             <!-- Current Surah Display -->
-            <div class="text-center mb-6 md:mb-8">
-              <div class="inline-block bg-cyan-50 px-4 py-2 rounded-lg mb-3">
-                <span class="text-sm text-cyan-700 font-medium"
-                  >NOW PLAYING</span
-                >
+            <div class="text-center mb-8">
+              <div class="inline-flex items-center glass-bubble px-5 py-2 mb-4">
+                <div
+                  class="w-2 h-2 bg-calm-teal rounded-full mr-2 animate-pulse-soft"
+                ></div>
+                <span class="text-sm font-semibold text-calm-teal">
+                  NOW PLAYING
+                </span>
               </div>
               <h3
                 id="current-surah-name"
-                class="text-2xl md:text-3xl font-semibold text-gray-900 mb-1"
+                class="text-3xl md:text-4xl font-bold text-gray-800 mb-3 arabic-font"
               >
-                Al-Fātiḥah
+                سورة الفاتحة
               </h3>
-              <p id="current-surah-details" class="text-gray-600">
-                <span class="text-cyan-700 font-medium">Surah 1</span> • The
-                Opening
-              </p>
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <span
+                  class="px-4 py-2 glass-bubble text-calm-teal font-medium text-sm"
+                >
+                  <i class="fas fa-bookmark mr-2"></i>Surah
+                  <span id="current-surah-number">1</span>
+                </span>
+                <span class="text-gray-400">•</span>
+                <span
+                  id="current-surah-translation"
+                  class="text-gray-700 font-medium"
+                >
+                  The Opening
+                </span>
+              </div>
             </div>
 
             <!-- Progress Bar -->
-            <div class="mb-7 md:mb-8">
-              <div
-                class="flex justify-between text-xs md:text-sm text-gray-500 mb-2"
-              >
+            <div class="mb-8">
+              <div class="flex justify-between text-sm text-gray-500 mb-3">
                 <span id="current-time">0:00</span>
                 <span id="total-duration">0:00</span>
               </div>
               <input
                 type="range"
                 id="progress-bar"
-                class="w-full"
+                class="range-slider"
                 value="0"
                 min="0"
                 max="100"
@@ -265,12 +463,10 @@
             </div>
 
             <!-- Player Controls -->
-            <div
-              class="flex justify-center items-center space-x-6 md:space-x-10 mb-8"
-            >
+            <div class="flex items-center justify-center gap-6 md:gap-8 mb-10">
               <button
                 id="prev-btn"
-                class="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+                class="btn-organic w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-raised hover:shadow-raised-hover"
                 title="Previous Surah"
               >
                 <i class="fas fa-step-backward text-lg md:text-xl"></i>
@@ -278,54 +474,53 @@
 
               <button
                 id="play-pause-btn"
-                class="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-700 to-cyan-600 text-white play-btn shadow-lg"
+                class="btn-primary w-18 h-18 md:w-20 md:h-20 flex items-center justify-center shadow-primary hover:shadow-primary-hover"
                 title="Play/Pause"
               >
                 <i
                   id="play-pause-icon"
-                  class="fas fa-play text-2xl md:text-3xl ml-1"
+                  class="fas fa-play text-2xl md:text-3xl"
                 ></i>
               </button>
 
               <button
                 id="next-btn"
-                class="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+                class="btn-organic w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-raised hover:shadow-raised-hover"
                 title="Next Surah"
               >
                 <i class="fas fa-step-forward text-lg md:text-xl"></i>
               </button>
             </div>
 
-            <!-- Volume and Settings -->
-            <div class="space-y-5">
-              <!-- Volume Control -->
-              <div class="flex items-center justify-center">
-                <i class="fas fa-volume-low text-gray-500 text-lg mr-3"></i>
+            <!-- Volume Control -->
+            <div class="mb-8">
+              <div class="flex items-center justify-center gap-4">
+                <i class="fas fa-volume-low text-gray-500"></i>
                 <input
                   type="range"
                   id="volume-control"
-                  class="w-48 md:w-56"
+                  class="range-slider flex-1 max-w-md"
                   value="70"
                   min="0"
                   max="100"
                 />
-                <i class="fas fa-volume-high text-gray-500 text-lg ml-3"></i>
+                <i class="fas fa-volume-high text-gray-500"></i>
               </div>
+            </div>
 
-              <!-- Auto-play Setting -->
-              <div class="flex items-center justify-center">
-                <div class="flex items-center bg-gray-50 px-4 py-2 rounded-lg">
-                  <div class="toggle-switch mr-3">
-                    <input type="checkbox" id="auto-play-toggle" checked />
-                    <span class="toggle-slider"></span>
-                  </div>
-                  <label
-                    for="auto-play-toggle"
-                    class="text-sm text-gray-700 select-none"
-                  >
-                    Auto-play next surah
-                  </label>
+            <!-- Settings -->
+            <div class="flex flex-wrap items-center justify-center gap-4">
+              <div class="flex items-center glass-bubble px-4 py-3">
+                <div class="toggle-container mr-3">
+                  <input type="checkbox" id="auto-play-toggle" checked />
+                  <span class="toggle-slider"></span>
                 </div>
+                <label
+                  for="auto-play-toggle"
+                  class="text-sm font-medium text-gray-700 cursor-pointer"
+                >
+                  Auto-play next surah
+                </label>
               </div>
             </div>
 
@@ -336,59 +531,118 @@
           </div>
         </div>
 
-        <!-- Playlist Card -->
-        <div class="lg:w-1/3">
+        <!-- Playlist Sidebar -->
+        <div class="lg:col-span-1">
           <div
-            class="bg-white rounded-xl md:rounded-2xl card-shadow h-full flex flex-col"
+            class="glass-container glass-bubble h-full flex flex-col shadow-bubble hover:shadow-bubble-hover"
           >
-            <div class="p-5 md:p-6 border-b">
-              <div class="flex items-center">
+            <!-- Playlist Header -->
+            <div class="p-6 border-b border-white/40">
+              <div class="flex items-center gap-3 mb-4">
                 <div
-                  class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center mr-3"
+                  class="w-12 h-12 rounded-xl bg-calm-teal/10 flex items-center justify-center"
                 >
-                  <i class="fas fa-list-ul text-cyan-700"></i>
+                  <i class="fas fa-list-ul text-calm-teal"></i>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">
+                  <h3 class="text-xl font-bold text-gray-800">
                     Surah Playlist
                   </h3>
-                  <p class="text-gray-500 text-sm">
-                    Select any surah to listen
-                  </p>
+                  <p class="text-sm text-gray-500">Click to select</p>
                 </div>
               </div>
             </div>
 
-            <div class="flex-1 p-2 md:p-4">
-              <div
-                class="playlist-scroll"
-                style="max-height: 420px; overflow-y: auto"
-              >
-                <ul id="surah-playlist" class="space-y-2">
-                  <!-- Playlist items will be generated by JavaScript -->
+            <!-- Playlist Items -->
+            <div class="flex-1 overflow-hidden p-4">
+              <div class="h-full overflow-y-auto scrollbar-glass pr-2">
+                <ul id="surah-playlist" class="space-y-3">
+                  <!-- Example playlist items (will be populated by JS) -->
+                  <li class="playlist-item current p-4 cursor-pointer">
+                    <div class="flex items-center gap-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-calm-teal flex items-center justify-center"
+                      >
+                        <i class="fas fa-play text-white"></i>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="font-bold text-gray-800">Al-Fātiḥah</h4>
+                        <p class="text-sm text-gray-600">The Opening • 1:15</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="playlist-item p-4 cursor-pointer">
+                    <div class="flex items-center gap-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center"
+                      >
+                        <span class="font-bold text-gray-700">2</span>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="font-bold text-gray-800">Al-Baqarah</h4>
+                        <p class="text-sm text-gray-600">The Cow • 2:30:00</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="playlist-item p-4 cursor-pointer">
+                    <div class="flex items-center gap-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center"
+                      >
+                        <span class="font-bold text-gray-700">3</span>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="font-bold text-gray-800">Āl 'Imrān</h4>
+                        <p class="text-sm text-gray-600">
+                          Family of Imran • 45:00
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="playlist-item p-4 cursor-pointer">
+                    <div class="flex items-center gap-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center"
+                      >
+                        <span class="font-bold text-gray-700">4</span>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="font-bold text-gray-800">An-Nisā'</h4>
+                        <p class="text-sm text-gray-600">The Women • 1:00:00</p>
+                      </div>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
 
             <!-- Player Status -->
-            <div class="p-4 border-t bg-gray-50 rounded-b-xl md:rounded-b-2xl">
+            <div class="p-4 border-t border-white/40 bg-white/40">
               <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                  <span class="text-sm text-gray-600">Status:</span>
-                  <span
-                    id="player-status"
-                    class="text-sm font-medium text-gray-800 ml-1"
-                    >Ready</span
-                  >
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div
+                      class="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-30"
+                    ></div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">Status</div>
+                    <div
+                      id="player-status"
+                      class="text-sm font-semibold text-gray-800"
+                    >
+                      Ready
+                    </div>
+                  </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-xs text-gray-500">Last played</div>
+                  <div class="text-xs text-gray-500">Last Played</div>
                   <div
                     id="last-played"
-                    class="text-sm font-medium text-cyan-700"
+                    class="text-sm font-semibold text-calm-teal"
                   >
-                    -
+                    Al-Fātiḥah
                   </div>
                 </div>
               </div>
@@ -398,24 +652,131 @@
       </div>
 
       <!-- Footer -->
-      <footer class="mt-10 md:mt-14 pt-6 border-t border-gray-200 text-center">
-        <div class="mb-4">
-          <div class="inline-flex items-center space-x-2 text-gray-400">
-            <i class="fas fa-circle-info"></i>
-            <span class="text-sm">Created by: Kabir Almustapha Fandirma</span>
-          </div>
-        </div>
+      <footer
+        class="w-full max-w-6xl mt-10 pt-8 border-t border-gray-200/60 text-center"
+      >
+        <p class="text-sm text-gray-600 mb-2">
+          May this player bring peace and tranquility to your heart
+        </p>
+        <p class="text-xs text-gray-500">
+          Created by Kabir Almustapha Fandirma • May Allah accept our efforts
+        </p>
       </footer>
     </div>
 
     <!-- JavaScript -->
     <script src="js/player.js"></script>
     <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("/service-worker.js");
+      // Simple player controls (basic implementation)
+      document.addEventListener("DOMContentLoaded", function () {
+        const audio = document.getElementById("quran-audio");
+        const playPauseBtn = document.getElementById("play-pause-btn");
+        const playPauseIcon = document.getElementById("play-pause-icon");
+        const progressBar = document.getElementById("progress-bar");
+        const currentTimeEl = document.getElementById("current-time");
+        const totalDurationEl = document.getElementById("total-duration");
+
+        let isPlaying = false;
+
+        // Play/Pause functionality
+        playPauseBtn.addEventListener("click", function () {
+          if (isPlaying) {
+            audio.pause();
+            playPauseIcon.className = "fas fa-play text-2xl md:text-3xl";
+            document.getElementById("player-status").textContent = "Paused";
+          } else {
+            audio.play();
+            playPauseIcon.className = "fas fa-pause text-2xl md:text-3xl";
+            document.getElementById("player-status").textContent = "Playing";
+          }
+          isPlaying = !isPlaying;
         });
-      }
+
+        // Update progress bar
+        audio.addEventListener("timeupdate", function () {
+          const currentTime = audio.currentTime;
+          const duration = audio.duration;
+
+          if (duration) {
+            const progress = (currentTime / duration) * 100;
+            progressBar.value = progress;
+
+            // Format time display
+            currentTimeEl.textContent = formatTime(currentTime);
+            totalDurationEl.textContent = formatTime(duration);
+          }
+        });
+
+        // Seek functionality
+        progressBar.addEventListener("input", function () {
+          const duration = audio.duration;
+          if (duration) {
+            const seekTime = (this.value / 100) * duration;
+            audio.currentTime = seekTime;
+          }
+        });
+
+        // Format time helper
+        function formatTime(seconds) {
+          const mins = Math.floor(seconds / 60);
+          const secs = Math.floor(seconds % 60);
+          return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+        }
+
+        // Playlist item clicks
+        document.querySelectorAll(".playlist-item").forEach((item) => {
+          item.addEventListener("click", function () {
+            // Remove current class from all items
+            document.querySelectorAll(".playlist-item").forEach((i) => {
+              i.classList.remove("current");
+              const iconDiv = i.querySelector(".w-12.h-12");
+              if (iconDiv && !i.classList.contains("current")) {
+                const num = i.querySelector(".font-bold")?.textContent || "1";
+                iconDiv.className =
+                  "w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center";
+                iconDiv.innerHTML = `<span class="font-bold text-gray-700">${num}</span>`;
+              }
+            });
+
+            // Add current class to clicked item
+            this.classList.add("current");
+            const iconDiv = this.querySelector(".w-12.h-12");
+            if (iconDiv) {
+              iconDiv.className =
+                "w-12 h-12 rounded-xl bg-calm-teal flex items-center justify-center";
+              iconDiv.innerHTML = '<i class="fas fa-play text-white"></i>';
+            }
+
+            // Update current surah display
+            const surahName = this.querySelector("h4").textContent;
+            document.getElementById("current-surah-name").textContent =
+              surahName;
+            document.getElementById("last-played").textContent = surahName;
+
+            // Reset player if playing
+            if (isPlaying) {
+              audio.pause();
+              isPlaying = false;
+              playPauseIcon.className = "fas fa-play text-2xl md:text-3xl";
+              document.getElementById("player-status").textContent = "Ready";
+            }
+          });
+        });
+
+        // Volume control
+        const volumeControl = document.getElementById("volume-control");
+        volumeControl.addEventListener("input", function () {
+          audio.volume = this.value / 100;
+        });
+
+        // Auto-play toggle
+        const autoPlayToggle = document.getElementById("auto-play-toggle");
+        autoPlayToggle.addEventListener("change", function () {
+          document.getElementById("player-status").textContent = `Auto-play: ${
+            this.checked ? "On" : "Off"
+          }`;
+        });
+      });
     </script>
   </body>
 </html>
