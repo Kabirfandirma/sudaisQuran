@@ -1,6 +1,6 @@
 /**
  * Sheikh AbdulRahman Al-Sudais Qur'an Audio Player
- * Clean, respectful interface for Qur'an recitation
+ * A respectful, distraction-free player for Qur'an recitation
  */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentSurahIndex = 0;
   let isPlaying = false;
   let autoPlayEnabled = true;
-  let updateProgressInterval;
 
   // Initialize Player
   function initPlayer() {
@@ -65,19 +64,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const savedVolume = localStorage.getItem("sudaisVolume");
     const savedAutoPlay = localStorage.getItem("sudaisAutoPlay");
 
-    if (savedSurahIndex !== null && !isNaN(savedSurahIndex)) {
+    if (savedSurahIndex !== null) {
       currentSurahIndex = parseInt(savedSurahIndex);
-      if (currentSurahIndex >= 0 && currentSurahIndex < surahs.length) {
-        lastPlayedEl.textContent = surahs[currentSurahIndex].surah;
-      }
+      lastPlayedEl.textContent = surahs[currentSurahIndex].surah;
     }
 
     if (savedVolume !== null) {
-      const volumeValue = parseInt(savedVolume);
-      if (!isNaN(volumeValue) && volumeValue >= 0 && volumeValue <= 100) {
-        volumeControl.value = volumeValue;
-        audioPlayer.volume = volumeValue / 100;
-      }
+      volumeControl.value = savedVolume;
+      audioPlayer.volume = savedVolume / 100;
     } else {
       audioPlayer.volume = 0.7; // Default volume
       volumeControl.value = 70;
@@ -95,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderPlaylist();
 
     // Update player status
-    updatePlayerStatus("Ready to play");
+    playerStatus.textContent = "Ready";
   }
 
   // Load a specific surah
@@ -105,17 +99,12 @@ document.addEventListener("DOMContentLoaded", function () {
     currentSurahIndex = index;
     const surah = surahs[index];
 
-    // Pause current playback
-    if (isPlaying) {
-      pauseSurah();
-    }
-
     // Update audio source
     audioPlayer.src = surah.file;
 
     // Update UI
     currentSurahName.textContent = surah.surah;
-    currentSurahDetails.innerHTML = `<span class="text-cyan-700 font-medium">Surah ${surah.number}</span> • ${surah.translation}`;
+    currentSurahDetails.textContent = `Surah ${surah.number} • ${surah.translation}`;
 
     // Update playlist highlighting
     updatePlaylistHighlight();
@@ -125,17 +114,13 @@ document.addEventListener("DOMContentLoaded", function () {
     lastPlayedEl.textContent = surah.surah;
 
     // Update player status
-    updatePlayerStatus(`Loaded: ${surah.surah}`);
+    playerStatus.textContent = "Loaded: " + surah.surah;
 
     // When metadata is loaded, update duration
     audioPlayer.addEventListener(
       "loadedmetadata",
       function () {
-        if (!isNaN(audioPlayer.duration) && audioPlayer.duration > 0) {
-          totalDurationEl.textContent = formatTime(audioPlayer.duration);
-        } else {
-          totalDurationEl.textContent = surah.duration || "--:--";
-        }
+        totalDurationEl.textContent = formatTime(audioPlayer.duration);
       },
       { once: true }
     );
@@ -143,11 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Reset progress bar
     progressBar.value = 0;
     currentTimeEl.textContent = "0:00";
-
-    // Clear any existing interval
-    if (updateProgressInterval) {
-      clearInterval(updateProgressInterval);
-    }
   }
 
   // Render playlist
@@ -156,35 +136,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     surahs.forEach((surah, index) => {
       const li = document.createElement("li");
-      li.className = `playlist-item p-3 rounded-lg cursor-pointer transition-all duration-200 border border-transparent ${
-        index === currentSurahIndex ? "current-playing" : ""
+      li.className = `surah-item p-3 rounded-lg cursor-pointer transition ${
+        index === currentSurahIndex
+          ? "bg-blue-50 border border-blue-200"
+          : "hover:bg-gray-100"
       }`;
       li.innerHTML = `
-                <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${
-                      index === currentSurahIndex
-                        ? "bg-cyan-100 text-cyan-700"
-                        : "bg-gray-100 text-gray-600"
-                    }">
-                        <span class="font-semibold">${surah.number}</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="font-medium text-gray-900">${
-                          surah.surah
-                        }</div>
-                        <div class="text-sm text-gray-500">${
-                          surah.translation
-                        }</div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="font-medium text-gray-800">${surah.surah}</div>
+                        <div class="text-sm text-gray-600">${surah.translation} • ${surah.duration}</div>
                     </div>
                     <div class="text-right">
-                        <div class="text-xs text-gray-400">${
-                          surah.duration
-                        }</div>
-                        ${
-                          index === currentSurahIndex
-                            ? '<div class="w-2 h-2 rounded-full bg-cyan-500 mt-1 ml-auto"></div>'
-                            : ""
-                        }
+                        <div class="text-lg font-bold text-[#1a5f7a]">${surah.number}</div>
+                        <div class="text-xs text-gray-500">Surah</div>
                     </div>
                 </div>
             `;
@@ -200,26 +165,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Update playlist highlight
   function updatePlaylistHighlight() {
-    const items = document.querySelectorAll(".playlist-item");
+    const items = document.querySelectorAll(".surah-item");
     items.forEach((item, index) => {
       if (index === currentSurahIndex) {
-        item.classList.add("current-playing");
-        item.classList.remove("border-transparent");
+        item.className =
+          "surah-item p-3 rounded-lg cursor-pointer transition bg-blue-50 border border-blue-200";
       } else {
-        item.classList.remove("current-playing");
-        item.classList.add("border-transparent");
+        item.className =
+          "surah-item p-3 rounded-lg cursor-pointer transition hover:bg-gray-100";
       }
     });
   }
 
-  // Update player status
-  function updatePlayerStatus(status) {
-    playerStatus.textContent = status;
-  }
-
   // Play/pause functionality
   function togglePlayPause() {
-    if (audioPlayer.src === "" || audioPlayer.src.includes("undefined")) {
+    if (audioPlayer.src === "") {
       loadSurah(currentSurahIndex);
     }
 
@@ -231,49 +191,27 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function playSurah() {
-    // Ensure audio is loaded
-    if (!audioPlayer.src || audioPlayer.src.includes("undefined")) {
-      loadSurah(currentSurahIndex);
-    }
-
-    const playPromise = audioPlayer.play();
-
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          isPlaying = true;
-          playPauseIcon.className = "fas fa-pause text-2xl md:text-3xl";
-          updatePlayerStatus(`Playing: ${surahs[currentSurahIndex].surah}`);
-
-          // Start progress updates
-          startProgressUpdates();
-        })
-        .catch((error) => {
-          console.error("Playback failed:", error);
-          updatePlayerStatus("Click to play");
-        });
-    }
+    audioPlayer
+      .play()
+      .then(() => {
+        isPlaying = true;
+        playPauseIcon.className = "fas fa-pause text-2xl";
+        playPauseBtn.classList.add("playing");
+        playerStatus.textContent =
+          "Playing: " + surahs[currentSurahIndex].surah;
+      })
+      .catch((error) => {
+        console.error("Playback failed:", error);
+        playerStatus.textContent = "Playback error";
+      });
   }
 
   function pauseSurah() {
     audioPlayer.pause();
     isPlaying = false;
-    playPauseIcon.className = "fas fa-play text-2xl md:text-3xl ml-1";
-    updatePlayerStatus("Paused");
-
-    // Stop progress updates
-    if (updateProgressInterval) {
-      clearInterval(updateProgressInterval);
-    }
-  }
-
-  // Start updating progress
-  function startProgressUpdates() {
-    if (updateProgressInterval) {
-      clearInterval(updateProgressInterval);
-    }
-
-    updateProgressInterval = setInterval(updateProgress, 500);
+    playPauseIcon.className = "fas fa-play text-2xl";
+    playPauseBtn.classList.remove("playing");
+    playerStatus.textContent = "Paused";
   }
 
   // Next/previous surah
@@ -284,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       // If at last surah, stop playback
       pauseSurah();
-      updatePlayerStatus("End of playlist");
+      playerStatus.textContent = "Reached end of playlist";
     }
   }
 
@@ -295,16 +233,13 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       // If at first surah, restart it
       audioPlayer.currentTime = 0;
-      updatePlayerStatus("Restarted surah");
-      if (!isPlaying) {
-        playSurah();
-      }
+      playerStatus.textContent = "Restarted surah";
     }
   }
 
   // Format time from seconds to MM:SS
   function formatTime(seconds) {
-    if (isNaN(seconds) || seconds === Infinity) return "0:00";
+    if (isNaN(seconds)) return "0:00";
 
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -313,47 +248,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Update progress bar as audio plays
   function updateProgress() {
-    if (!isNaN(audioPlayer.duration) && audioPlayer.duration > 0) {
+    if (!isNaN(audioPlayer.duration)) {
       const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
       progressBar.value = progress;
       currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
-
-      // Update total duration if not set
-      if (
-        totalDurationEl.textContent === "0:00" ||
-        totalDurationEl.textContent === "NaN:NaN"
-      ) {
-        totalDurationEl.textContent = formatTime(audioPlayer.duration);
-      }
     }
   }
 
   // Seek functionality
   function seekAudio() {
-    if (!isNaN(audioPlayer.duration) && audioPlayer.duration > 0) {
-      const seekTime = (progressBar.value / 100) * audioPlayer.duration;
-      audioPlayer.currentTime = seekTime;
-    }
+    const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+    audioPlayer.currentTime = seekTime;
   }
 
   // Volume control
   function updateVolume() {
-    const volume = parseInt(volumeControl.value) / 100;
-    if (!isNaN(volume) && volume >= 0 && volume <= 1) {
-      audioPlayer.volume = volume;
-      localStorage.setItem("sudaisVolume", volumeControl.value);
-    }
+    const volume = volumeControl.value / 100;
+    audioPlayer.volume = volume;
+    localStorage.setItem("sudaisVolume", volumeControl.value);
   }
 
   // Auto-play next surah when current ends
   function handleAudioEnd() {
     if (autoPlayEnabled && currentSurahIndex < surahs.length - 1) {
-      setTimeout(() => {
-        nextSurah();
-      }, 500);
+      nextSurah();
     } else if (autoPlayEnabled && currentSurahIndex === surahs.length - 1) {
       pauseSurah();
-      updatePlayerStatus("Playback completed");
+      playerStatus.textContent = "Playback completed";
     }
   }
 
@@ -361,9 +282,9 @@ document.addEventListener("DOMContentLoaded", function () {
   function toggleAutoPlay() {
     autoPlayEnabled = autoPlayToggle.checked;
     localStorage.setItem("sudaisAutoPlay", autoPlayEnabled.toString());
-    updatePlayerStatus(
-      `Auto-play: ${autoPlayEnabled ? "Enabled" : "Disabled"}`
-    );
+    playerStatus.textContent = `Auto-play: ${
+      autoPlayEnabled ? "Enabled" : "Disabled"
+    }`;
   }
 
   // Event Listeners
@@ -372,7 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
   nextBtn.addEventListener("click", nextSurah);
 
   progressBar.addEventListener("input", seekAudio);
-  progressBar.addEventListener("change", seekAudio);
+  audioPlayer.addEventListener("timeupdate", updateProgress);
 
   volumeControl.addEventListener("input", updateVolume);
   autoPlayToggle.addEventListener("change", toggleAutoPlay);
@@ -381,11 +302,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Keyboard shortcuts for better accessibility
   document.addEventListener("keydown", function (event) {
-    // Ignore if user is typing in an input field
-    if (event.target.matches("input, textarea, select")) return;
-
     // Space bar to play/pause
-    if (event.code === "Space") {
+    if (
+      event.code === "Space" &&
+      !event.target.matches("input, button, textarea")
+    ) {
       event.preventDefault();
       togglePlayPause();
     }
@@ -393,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Arrow keys for previous/next
     if (event.code === "ArrowLeft") {
       event.preventDefault();
-      if (event.ctrlKey || event.metaKey) {
+      if (event.ctrlKey) {
         prevSurah();
       } else {
         audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 10);
@@ -402,71 +323,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (event.code === "ArrowRight") {
       event.preventDefault();
-      if (event.ctrlKey || event.metaKey) {
+      if (event.ctrlKey) {
         nextSurah();
       } else {
-        if (!isNaN(audioPlayer.duration)) {
-          audioPlayer.currentTime = Math.min(
-            audioPlayer.duration,
-            audioPlayer.currentTime + 10
-          );
-        }
+        audioPlayer.currentTime = Math.min(
+          audioPlayer.duration,
+          audioPlayer.currentTime + 10
+        );
       }
     }
 
     // Volume up/down
-    if (event.code === "ArrowUp" && (event.ctrlKey || event.metaKey)) {
+    if (event.code === "ArrowUp" && event.ctrlKey) {
       event.preventDefault();
       volumeControl.value = Math.min(100, parseInt(volumeControl.value) + 10);
       updateVolume();
     }
 
-    if (event.code === "ArrowDown" && (event.ctrlKey || event.metaKey)) {
+    if (event.code === "ArrowDown" && event.ctrlKey) {
       event.preventDefault();
       volumeControl.value = Math.max(0, parseInt(volumeControl.value) - 10);
       updateVolume();
-    }
-
-    // Mute with 'm' key
-    if (event.code === "KeyM") {
-      event.preventDefault();
-      if (audioPlayer.volume > 0) {
-        localStorage.setItem("sudaisLastVolume", volumeControl.value);
-        volumeControl.value = 0;
-        updateVolume();
-      } else {
-        const lastVolume = localStorage.getItem("sudaisLastVolume") || 70;
-        volumeControl.value = lastVolume;
-        updateVolume();
-      }
-    }
-  });
-
-  // Handle page visibility changes
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden && isPlaying) {
-      // Optionally pause when tab is hidden
-      // pauseSurah();
     }
   });
 
   // Initialize the player
   initPlayer();
-
-  // Add CSS for current playing item
-  const style = document.createElement("style");
-  style.textContent = `
-        .playlist-item.current-playing {
-            background-color: #f0f9ff !important;
-            border-color: #bae6fd !important;
-            border-left-width: 4px !important;
-            border-left-color: #0e7490 !important;
-            padding-left: 12px !important;
-        }
-        
-        #play-pause-btn.playing {
-            background: linear-gradient(to right, #0891b2, #0e7490) !important;
-        }
-    `;
-  document.head.appendChild(style);
 });
