@@ -1,42 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Listen to Qur'an recitation by Sheikh AbdulRahman Al-Sudais. Full Surah audio with playlist, custom player, and offline-ready PWA."
+    />
+    <meta name="author" content="Kabir Almustapha Fandirma" />
+    <meta name="theme-color" content="#0f172a" />
 
-  <title>Qur'an Recitation – Sheikh AbdulRahman Al-Sudais</title>
+    <title>Qur'an Recitation - Sheikh AbdulRahman Al-Sudais</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0f172a" />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+    <link
+      rel="icon"
+      href="assets/images/icon-192.png"
+      sizes="192x192"
+      type="image/png"
+    />
+    <link rel="apple-touch-icon" href="assets/images/icon-512.png" />
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-    .arabic {
-      font-family: 'Scheherazade New', serif;
-    }
-  </style>
-</head>
-
+    <!-- Custom Styles -->
+    <style>
       body {
         font-family: "Inter", sans-serif;
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -63,7 +67,6 @@
         border-radius: 3px;
         outline: none;
       }
-
       input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
         width: 18px;
@@ -74,7 +77,6 @@
         border: 3px solid white;
         box-shadow: 0 2px 6px rgba(14, 116, 144, 0.3);
       }
-
       input[type="range"]::-moz-range-thumb {
         width: 18px;
         height: 18px;
@@ -85,20 +87,18 @@
         box-shadow: 0 2px 6px rgba(14, 116, 144, 0.3);
       }
 
-      /* Custom Toggle Switch */
+      /* Toggle Switch */
       .toggle-switch {
         position: relative;
         display: inline-block;
         width: 52px;
         height: 26px;
       }
-
       .toggle-switch input {
         opacity: 0;
         width: 0;
         height: 0;
       }
-
       .toggle-slider {
         position: absolute;
         cursor: pointer;
@@ -110,7 +110,6 @@
         transition: 0.4s;
         border-radius: 34px;
       }
-
       .toggle-slider:before {
         position: absolute;
         content: "";
@@ -122,51 +121,45 @@
         transition: 0.4s;
         border-radius: 50%;
       }
-
       input:checked + .toggle-slider {
         background-color: #0e7490;
       }
-
       input:checked + .toggle-slider:before {
         transform: translateX(26px);
       }
 
-      /* Playlist Item Hover */
+      /* Playlist Hover */
       .playlist-item:hover {
         background-color: #f0f9ff;
         border-color: #bae6fd;
       }
 
-      /* Scrollbar Styling */
+      /* Scrollbar */
       .playlist-scroll::-webkit-scrollbar {
         width: 6px;
       }
-
       .playlist-scroll::-webkit-scrollbar-track {
         background: #f1f5f9;
         border-radius: 3px;
       }
-
       .playlist-scroll::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 3px;
       }
-
       .playlist-scroll::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
       }
 
-      /* Current Playing Highlight */
+      /* Current Playing */
       .current-playing {
         background-color: #f0f9ff !important;
         border-left: 4px solid #0e7490 !important;
       }
 
-      /* Button Animations */
+      /* Button Hover */
       .play-btn {
         transition: all 0.3s ease;
       }
-
       .play-btn:hover {
         transform: scale(1.05);
         box-shadow: 0 10px 20px rgba(14, 116, 144, 0.2);
@@ -177,13 +170,13 @@
         .mobile-stack {
           flex-direction: column;
         }
-
         .mobile-full {
           width: 100%;
         }
       }
     </style>
   </head>
+
   <body class="text-gray-800">
     <div class="container mx-auto px-4 py-6 md:py-10 max-w-5xl">
       <!-- Header -->
